@@ -4,9 +4,9 @@
     {
         public IsoCode(string code)
         {
-            Code = code.ToUpperInvariant();
+            Value = code.ToUpperInvariant();
         }
 
-        public string Code { get; init; }
+        public string Value { get; init; }
     }
 }

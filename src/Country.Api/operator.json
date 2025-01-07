@@ -1,0 +1,52 @@
+[
+    {
+        "countryIso": "NG",
+        "operator": "MTN Nigeria",
+        "code": "MTN NG"
+    },
+    {
+        "countryIso": "NG",
+        "operator": "Airtel Nigeria",
+        "code": "ANG"
+    },
+    {
+        "countryIso": "NG",
+        "operator": "9 Mobile Nigeria",
+        "code": "ETN"
+    },
+    {
+        "countryIso": "NG",
+        "operator": "Globacom Nigeria",
+        "code": "GLO NG"
+    },
+    {
+        "countryIso": "GH",
+        "operator": "Vodafone Ghana",
+        "code": "Vodafone GH"
+    },
+    {
+        "countryIso": "GH",
+        "operator": "MTN Ghana",
+        "code": "MTN Ghana"
+    },
+    {
+        "countryIso": "GH",
+        "operator": "Tigo Ghana",
+        "code": "Tigo Ghana"
+    },
+    {
+        "countryIso": "BN",
+        "operator": "MTN Benin",
+        "code": "MTN Benin"
+    },
+    {
+        "countryIso": "BN",
+        "operator": "Moov Benin",
+        "code": "Moov Benin"
+    },
+    {
+        "countryIso": "CIV",
+        "operator": "MTN Cote d'Ivoire",
+        "code": "MTN CIV"
+    }
+]

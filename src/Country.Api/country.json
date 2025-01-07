@@ -1,0 +1,23 @@
+[
+    {
+        "code": "234",
+        "name": "Nigeria",
+        "iso": "NG"
+    },
+    {
+        "code": "233",
+        "name": "Ghana",
+        "iso": "GH"
+    },
+    {
+        "code": "229",
+        "name": "Benin Republic",
+        "iso": "BN"
+    },
+    {
+        "code": "225",
+        "name": "Cote d'Ivoire",
+        "iso": "CIV"
+    }
+
+]

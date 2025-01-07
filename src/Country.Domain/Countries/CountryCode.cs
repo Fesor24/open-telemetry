@@ -10,12 +10,12 @@ namespace Country.Domain.Countries
 
             Regex regex = new(pattern);
 
-            if (regex.IsMatch(code))
+            if (!regex.IsMatch(code))
                 throw new ApplicationException("Invalid country code");
 
-            Code = code;
+            Value = code;
         }
 
-        public string Code { get; init; }
+        public string Value { get; init; }
     }
 }
