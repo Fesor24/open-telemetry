@@ -15,7 +15,8 @@ namespace Country.Api.Endpoints.Countries
                 .ProducesProblem((int)HttpStatusCode.BadRequest)
                 .ProducesProblem((int)HttpStatusCode.NotFound);
 
-            routeGroup.MapGet("{phoneNo}", GetCountryByPhoneNoAsync);
+            routeGroup.MapGet("{phoneNo}", GetCountryByPhoneNoAsync)
+                .Produces<GetCountryByPhoneNoResponse>();
         }
 
         private static async Task<IResult> GetCountryByPhoneNoAsync(string phoneNo, ISender sender, 

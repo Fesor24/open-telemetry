@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using Country.Api.Endpoints.Countries;
 using Country.Api.Extensions;
 using Country.Application;
 using Country.Infrastructure;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,19 @@ builder.Services
     .AddApplicationServices();
 
 builder.Services.AddOpenApi();
+
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = ctx =>
+    {
+        ctx.ProblemDetails.Instance = $"{ctx.HttpContext.Request.Method} {ctx.HttpContext.Request.Path}";
+        ctx.ProblemDetails.Extensions.TryAdd("requestId", ctx.HttpContext.TraceIdentifier);
+
+        Activity? activity = ctx.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+
+        ctx.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
+    };
+});
 
 var app = builder.Build();
 

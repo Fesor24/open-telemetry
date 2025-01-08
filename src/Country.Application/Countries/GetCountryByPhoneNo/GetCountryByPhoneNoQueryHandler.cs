@@ -29,16 +29,22 @@ namespace Country.Application.Countries.GetCountryByPhoneNo
 
             if (country is null) return CountryErrors.NotFound;
 
-            return new GetCountryByPhoneNoResponse(
-                request.PhoneNo,
-                new Country(
-                    country.Code.Value,
-                    country.Name,
-                    country.IsoCode.Value,
-                    country.Operators
-                        .Select(op => new CountryOperator(op.Name, op.Code)).ToList()
-                    )
-                );
+            return new GetCountryByPhoneNoResponse
+            {
+                Number = request.PhoneNo,
+                Country = new Country
+                {
+                    CountryCode = country.Code.Value,
+                    Name = country.Name,
+                    CountryIso = country.IsoCode.Value,
+                    CountryDetails = country.Operators
+                        .Select(op => new CountryOperator
+                        {
+                            Operator = op.Name,
+                            OperatorCode = op.Code
+                        }).ToList()
+                }
+            };
         }
     }
 }

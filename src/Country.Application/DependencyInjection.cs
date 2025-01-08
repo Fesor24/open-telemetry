@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Country.Application.Abstractions.Behavior;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Country.Application
 {
@@ -15,6 +16,8 @@ namespace Country.Application
             services.AddMediatR(options =>
             {
                 options.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+
+                options.AddOpenBehavior(typeof(QueryCachingBehavior<,>));
             });
         }
     }

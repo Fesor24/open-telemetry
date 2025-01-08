@@ -1,4 +1,6 @@
-﻿using Country.Domain.Countries;
+﻿using Country.Application.Abstractions.Cache;
+using Country.Domain.Countries;
+using Country.Infrastructure.Cache;
 using Country.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +12,7 @@ namespace Country.Infrastructure
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             AddPersistence(services);
+            AddCaching(services);
 
             return services;
         }
@@ -19,6 +22,12 @@ namespace Country.Infrastructure
             services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("Country"));
 
             services.AddScoped<ICountryRepository, CountryRepository>();
+        }
+
+        private static void AddCaching(IServiceCollection services)
+        {
+            services.AddMemoryCache();
+            services.AddScoped<ICacheService, CacheService>();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Country.Domain.Abstractions
 {
@@ -27,6 +28,7 @@ namespace Country.Domain.Abstractions
     {
         private readonly TValue? _value;
 
+        [JsonConstructor]
         public Result(TValue value): base()
         {
             _value = value;

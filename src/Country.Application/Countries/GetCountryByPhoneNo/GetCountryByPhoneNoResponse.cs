@@ -1,21 +1,23 @@
 ﻿namespace Country.Application.Countries.GetCountryByPhoneNo
 {
-    public sealed record GetCountryByPhoneNoResponse(
-        string Number,
-        Country Country
-        );
+    public sealed class GetCountryByPhoneNoResponse
+    {
+        public string Number { get; set; }
+        public Country Country { get; set; }
+    };
 
-    public sealed record Country(
-        string CountryCode,
-        string Name,
-        string CountryIso,
-        IReadOnlyList<CountryOperator> CountryDetails
-        );
-
-    public sealed record CountryOperator(
-        string Operator,
-        string OperatorCode
-        );
+    public sealed class Country
+    {
+        public string CountryCode { get; set; }
+        public string Name { get; set; }
+        public string CountryIso { get; set; }
+        public IReadOnlyList<CountryOperator> CountryDetails { get; set; } = [];
+    };
 
 
+    public sealed class CountryOperator
+    {
+        public string Operator { get; set; }
+        public string OperatorCode { get; set; }
+    }
 }
