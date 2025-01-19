@@ -11,7 +11,9 @@ builder.Services
     .AddInfrastructureServices()
     .AddApplicationServices();
 
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddProblemDetails(options =>
 {
@@ -36,11 +38,13 @@ CountryEndpoint.RegisterEndpoint(app);
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-app.UseSwaggerUI(opts => opts.SwaggerEndpoint("/openapi/v1.json", "Endpoints"));
+// for .net 9...
+//app.UseSwaggerUI(opts => opts.SwaggerEndpoint("/openapi/v1.json", "Endpoints"));
 
 app.Run();

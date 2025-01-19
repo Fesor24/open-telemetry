@@ -13,13 +13,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Country.Application", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Country.Infrastructure", "src\Country.Infrastructure\Country.Infrastructure.csproj", "{5223EF81-521D-4B06-851A-BF783792F29C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8FC8FA47-B1BF-436D-8259-28F1DF86529F}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.override.yml = docker-compose.override.yml
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1F22BD19-CF79-4358-A1DA-09FD372D463B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -38,6 +41,9 @@ Global
 		{5223EF81-521D-4B06-851A-BF783792F29C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5223EF81-521D-4B06-851A-BF783792F29C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5223EF81-521D-4B06-851A-BF783792F29C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1F22BD19-CF79-4358-A1DA-09FD372D463B} = {2091E108-4C09-44AC-B897-05DADAC73219}

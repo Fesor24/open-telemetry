@@ -1,0 +1,14 @@
+name: "country-app"
+
+services:
+    api:
+        container_name: country_api
+        build:
+            context: src
+            dockerfile: Country.Api/Dockerfile
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Docker
+        ports:
+            - "7200:8080"
+
+        

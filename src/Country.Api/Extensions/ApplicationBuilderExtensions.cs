@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using Country.Api.Endpoints.Countries;
 using Country.Api.Middleware;
 using Country.Domain.Operators;
 using Country.Infrastructure;
@@ -15,10 +14,22 @@ namespace Country.Api.Extensions
 
             using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
+            string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "";
+
             if (!context.Set<CountryDomain>().Any())
             {
-                string countryContent = File.ReadAllText("../Country.Api/country.json");
-                string operatorContent = File.ReadAllText("../Country.Api/operator.json");
+                string countryContent, operatorContent;
+
+                if (env == "Docker")
+                {
+                    countryContent = File.ReadAllText("country.json");
+                    operatorContent = File.ReadAllText("operator.json");
+                }
+                else
+                {
+                    countryContent = File.ReadAllText("../Country.Api/country.json");
+                    operatorContent = File.ReadAllText("../Country.Api/operator.json");
+                }
 
                 var data = JsonSerializer.Deserialize<List<CountrySeedData>>(countryContent, ReadOptions);
                 var operators = JsonSerializer.Deserialize<List<OperatorSeedData>>(operatorContent, ReadOptions);
@@ -26,7 +37,7 @@ namespace Country.Api.Extensions
                 List<CountryDomain> countries = [];
                 List<Operator> countryOperators = [];
 
-                foreach(var item in data!)
+                foreach (var item in data!)
                 {
                     CountryDomain country = new(item.Name,
                         new Domain.Countries.CountryCode(item.Code),

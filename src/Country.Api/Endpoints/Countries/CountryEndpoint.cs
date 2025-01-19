@@ -11,12 +11,12 @@ namespace Country.Api.Endpoints.Countries
         public static void RegisterEndpoint(IEndpointRouteBuilder app)
         {
             var routeGroup = app.MapGroup("api/country")
-                .WithTags("Country")
-                .ProducesProblem((int)HttpStatusCode.BadRequest)
-                .ProducesProblem((int)HttpStatusCode.NotFound);
+                .WithTags("Country");
+                
 
             routeGroup.MapGet("{phoneNo}", GetCountryByPhoneNoAsync)
-                .Produces<GetCountryByPhoneNoResponse>();
+                .Produces<GetCountryByPhoneNoResponse>()
+                .ProducesProblem((int)HttpStatusCode.NotFound);
         }
 
         private static async Task<IResult> GetCountryByPhoneNoAsync(string phoneNo, ISender sender, 
