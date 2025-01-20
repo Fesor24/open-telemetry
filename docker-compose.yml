@@ -1,3 +1,5 @@
+name: "country-app"
+
 services:
     api:
-        image: country-api
+        image: ${DOCKER_REGISTRY-}country-api
