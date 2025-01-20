@@ -1,4 +1,5 @@
-﻿using Country.Application.Abstractions.Messaging;
+﻿using System.Diagnostics;
+using Country.Application.Abstractions.Messaging;
 using Country.Domain.Abstractions;
 using Country.Domain.Countries;
 
@@ -24,6 +25,10 @@ namespace Country.Application.Countries.GetCountryByPhoneNo
                 return Error.BadRequest("Bad.Request", "Phone no must be at least 4 characters");
 
             string code = request.PhoneNo[..3];
+
+            //always set primitive types...otherwise we might get into exceptions...
+            Activity.Current?.SetTag("phoneno", request.PhoneNo);
+            Activity.Current?.SetTag("phoneno.prefix", code);
 
             var country = await _countryRepository.GetByCountryCodeAsync(code, cancellationToken);
 

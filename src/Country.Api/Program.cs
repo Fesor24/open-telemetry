@@ -1,15 +1,55 @@
 using System.Diagnostics;
+using System.Reflection;
 using Country.Api.Endpoints.Countries;
 using Country.Api.Extensions;
 using Country.Application;
 using Country.Infrastructure;
 using Microsoft.AspNetCore.Http.Features;
+using Npgsql;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddInfrastructureServices()
     .AddApplicationServices();
+
+//string redisConnectionString = "";
+
+//IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
+
+//builder.Services.AddSingleton(connectionMultiplexer);
+
+//builder.Services.AddStackExchangeRedisCache(options =>
+//    options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer));
+
+//builder.Services.AddSingleton<IConnectionMultiplexer>(instance =>
+//{
+//    var configuration = ConfigurationOptions.Parse(redisConnectionString);
+
+//    return ConnectionMultiplexer.Connect(configuration);
+//});
+
+
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource
+        .AddService("Country.Api", serviceVersion: Assembly.GetExecutingAssembly().GetName().Version!.ToString(),
+        serviceNamespace: "open-telemetry-course")
+    .AddAttributes(new[]
+    {
+        new KeyValuePair<string, object>("service.version", Assembly.GetExecutingAssembly().GetName().Version!.ToString())
+    })// specify custom attributes...
+    )// configure resource...
+    .WithTracing(trc => 
+        trc.AddAspNetCoreInstrumentation()// will take care of the activities...
+        //.AddNpgsql()
+        /*.AddRedisInstrumentation()*/ // bcos of the singleton registered above for the connction multiplexer, it will be used here also...
+        .AddConsoleExporter()
+        .AddOtlpExporter(options =>
+            options.Endpoint = new Uri("http://jaeger:4317"))// this can find the receiver of the data running on a mcahine,we can specify an endpoint also, where we want to push it to...
+        );
 
 builder.Services.AddEndpointsApiExplorer();
 

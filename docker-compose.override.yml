@@ -9,5 +9,9 @@ services:
             - ASPNETCORE_HTTP_PORTS=5000 
         ports:
             - "7200:5000"
+    jaeger:
+        container_name: jaeger_countryapp
+        ports:
+            - "16686:16686"
 
         
