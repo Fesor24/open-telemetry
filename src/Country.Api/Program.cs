@@ -3,9 +3,11 @@ using System.Reflection;
 using Country.Api.Endpoints.Countries;
 using Country.Api.Extensions;
 using Country.Application;
+using Country.Application.Abstractions.Diagnostics;
 using Country.Infrastructure;
 using Microsoft.AspNetCore.Http.Features;
 using Npgsql;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using StackExchange.Redis;
@@ -49,6 +51,15 @@ builder.Services.AddOpenTelemetry()
         .AddConsoleExporter()
         .AddOtlpExporter(options =>
             options.Endpoint = new Uri("http://jaeger:4317"))// this can find the receiver of the data running on a mcahine,we can specify an endpoint also, where we want to push it to...
+        )
+    .WithMetrics(met => 
+        met.AddMeter(ApplicationDiagnostics.Meter.Name) // specify the meter we want to track...the instruments created under this meter
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation() // metrics exposed by these packages...
+        .AddMeter("Microsoft.AspNetCore.Hosting")
+        .AddMeter("Microsoft.AspNetCore.Server.Kestrel")// we could also do this...metrics exposed by .NET
+        .AddConsoleExporter()
+        .AddPrometheusExporter()// prometheus will scrape data from the api container...
         );
 
 builder.Services.AddEndpointsApiExplorer();
@@ -71,6 +82,8 @@ builder.Services.AddProblemDetails(options =>
 var app = builder.Build();
 
 app.UseGlobalExceptionMiddleware();
+
+app.UseOpenTelemetryPrometheusScrapingEndpoint();// this would expose an endpoint prometheus can call to scrape data from
 
 await app.SeedData();
 

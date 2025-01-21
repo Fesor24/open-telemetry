@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Country.Application.Abstractions.Diagnostics;
 using Country.Application.Abstractions.Messaging;
 using Country.Domain.Abstractions;
 using Country.Domain.Countries;
@@ -33,6 +34,13 @@ namespace Country.Application.Countries.GetCountryByPhoneNo
             var country = await _countryRepository.GetByCountryCodeAsync(code, cancellationToken);
 
             if (country is null) return CountryErrors.NotFound;
+
+            // we coud use examplers...key value pairs
+            // trying to track the types of client membership registered...
+            // here we try to track the requests by the code also...
+            // examplers is something we always need to check if the telemetry backend supports it...
+            ApplicationDiagnostics.NumbersRequestedCounter.Add(1, 
+                new[] { new KeyValuePair<string, object?>("numbers.code", code) });
 
             return new GetCountryByPhoneNoResponse
             {
