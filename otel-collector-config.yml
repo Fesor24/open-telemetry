@@ -1,0 +1,40 @@
+extensions:
+    health-check:
+    zpages:
+        endpoint: :55679
+
+receivers: #start of the pipeline...we need to have one reciever at least in the pipeline...
+    otlp: # we want to receive the data via otlp protocol...it could be in the pull or push based way...
+        protocols: # accept over grpc and http
+            grpc:
+            http:
+
+processors:
+    batch:
+
+exporters: # the same way we have receivers, we have at least one exporter also...once the pipeline runs, the exporter will recieve it and will need to send it somewhere
+    debug: # here we have 3 exporters...
+    otlp:
+        endpoint: "${JAEGER_ENDPOINT}"
+        tls:
+            insecure: true
+    prometheus:
+        endpoint: "0.0.0.0:8889"
+    
+    
+service:
+    pipelines: # we have two pipeline...one for traces and the other for metrics...
+        traces:
+            receivers:
+                - otlp # the receiver we set up above
+            processors: [batch]
+            exporters:
+                - debug
+                - otlp
+        metrics:
+            receivers:
+                - otlp
+            processors: [batch]
+            exporters:
+                - debug
+                - prometheus 

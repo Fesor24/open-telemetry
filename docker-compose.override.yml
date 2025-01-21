@@ -31,6 +31,21 @@ services:
         environment:
             GF_AUTH_ANONYMOUS_ENABLED: "true"
             GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+    otel-collector:
+        container_name: collector_countryapp
+        volumes:
+            - ./otel-collector/otel-collector-config.yml:/etc/otel/config.yaml
+            - ./log:/log/otel
+        command: --config /etc/otel/config.yaml
+        environment:
+            JAEGER_ENDPOINT: "jaeger:4317"
+        ports:
+            - "8889:8889" # Prometheus metrics exporter (scrape endpoint)
+            - "13133:13133" # health check extension
+            - "55679:55679" # ZPages extension
+        depends_on:
+            - jaeger
+            - prometheus 
 
 volumes:
     grafana_storage:

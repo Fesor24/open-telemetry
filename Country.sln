@@ -21,6 +21,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		prometheus.yml = prometheus.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "otel-collector", "otel-collector", "{E32113D7-88DC-47EC-BD83-8E7725C92D13}"
+	ProjectSection(SolutionItems) = preProject
+		otel-collector-config.yml = otel-collector-config.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

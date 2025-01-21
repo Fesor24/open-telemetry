@@ -9,3 +9,5 @@ services:
         image: prom/prometheus:v3.1.0
     grafana:
         image: grafana/grafana:11.4.0-ubuntu
+    otel-collector:
+        image: otel/opentelemetry-collector-contrib:0.103.0

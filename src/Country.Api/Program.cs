@@ -14,8 +14,11 @@ using StackExchange.Redis;
 
 // otel collector
 // it acts as a proxy between our service and a backend
-// collect telemetry in multiple formats and protocols
-// 
+// collect telemetry in multiple formats and protocols (benefit)
+// can process, filter and enrich telemetry until we decide to export it to a backend provider
+// a central place for receiving the data and exporting it to several backends
+// written in go...can be configured using yml...
+// when using collector, it can be scaled horizontally, so we could place it behind a load balacer...
 
 var builder = WebApplication.CreateBuilder(args);
 
