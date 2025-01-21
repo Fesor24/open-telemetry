@@ -12,6 +12,11 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using StackExchange.Redis;
 
+// otel collector
+// it acts as a proxy between our service and a backend
+// collect telemetry in multiple formats and protocols
+// 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
