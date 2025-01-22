@@ -1,40 +1,51 @@
-extensions:
-    health-check:
-    zpages:
-        endpoint: :55679
+#extensions:
+  #healthcheck: {} # Enables a health-check extension to monitor the collector's health.
+  #zpages: 
+    #endpoint: :55679 # Exposes an endpoint for debugging the collector.
 
-receivers: #start of the pipeline...we need to have one reciever at least in the pipeline...
-    otlp: # we want to receive the data via otlp protocol...it could be in the pull or push based way...
-        protocols: # accept over grpc and http
-            grpc:
-            http:
+receivers: # Start of the pipeline...we need to have at least one receiver in the pipeline.
+  otlp: # We want to receive the data via OTLP protocol...it could be in a pull or push-based way.
+    protocols: # Accept data over gRPC and HTTP.
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
 
 processors:
-    batch:
+  batch: # Helps in batching telemetry data before exporting.
 
-exporters: # the same way we have receivers, we have at least one exporter also...once the pipeline runs, the exporter will recieve it and will need to send it somewhere
-    debug: # here we have 3 exporters...
-    otlp:
-        endpoint: "${JAEGER_ENDPOINT}"
-        tls:
-            insecure: true
-    prometheus:
-        endpoint: "0.0.0.0:8889"
-    
-    
+exporters: # Just like we have receivers, we must have at least one exporter. Once the pipeline runs, the exporter will receive data and send it somewhere.
+  debug: # Used for debugging, prints telemetry data to logs.
+  otlp:
+    endpoint: "${JAEGER_ENDPOINT}" # Data will be sent to this endpoint. Uses an environment variable in Docker Compose.
+    tls:
+      insecure: true # Disables TLS security (only for local development).
+  prometheus:
+    endpoint: "0.0.0.0:8889" # The endpoint the collector will expose for Prometheus to scrape...we update same as target in the prometheus yml file
+
+# We could also export to a file, AWS CloudWatch, Azure Monitor, etc.
+# An example of a push-based approach is Jaeger...the data is pushed to an endpoint.
+# For a pull-based approach, an example is Prometheus...rather than scraping directly from an API, Prometheus scrapes it from the collector.
+
+extensions:
+  health_check:
+  pprof:
+  zpages:
+
 service:
-    pipelines: # we have two pipeline...one for traces and the other for metrics...
-        traces:
-            receivers:
-                - otlp # the receiver we set up above
-            processors: [batch]
-            exporters:
-                - debug
-                - otlp
-        metrics:
-            receivers:
-                - otlp
-            processors: [batch]
-            exporters:
-                - debug
-                - prometheus 
+  extensions: [health_check, pprof, zpages]
+  pipelines: # We have two pipelines: one for traces and one for metrics.
+    traces:
+      receivers:
+        - otlp # The receiver we set up above.
+      processors: [batch] # Uses batch processor.
+      exporters:
+        - debug
+        - otlp
+    metrics:
+      receivers:
+        - otlp
+      processors: [batch] # Uses batch processor.
+      exporters:
+        - debug # Sends metrics to the debug exporter.
+        - prometheus # Prometheus will scrape metrics from the collector.

@@ -58,7 +58,11 @@ builder.Services.AddOpenTelemetry()
         /*.AddRedisInstrumentation()*/ // bcos of the singleton registered above for the connction multiplexer, it will be used here also...
         .AddConsoleExporter()
         .AddOtlpExporter(options =>
-            options.Endpoint = new Uri("http://jaeger:4317"))// this can find the receiver of the data running on a mcahine,we can specify an endpoint also, where we want to push it to...
+        {
+            options.Endpoint = new Uri("http://otel-collector:4317");
+            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+        }) // the otlp collector endpoint
+            /*options.Endpoint = new Uri("http://jaeger:4317"))*/// this can find the receiver of the data running on a mcahine,we can specify an endpoint also, where we want to push it to...
         )
     .WithMetrics(met => 
         met.AddMeter(ApplicationDiagnostics.Meter.Name) // specify the meter we want to track...the instruments created under this meter
@@ -67,7 +71,9 @@ builder.Services.AddOpenTelemetry()
         .AddMeter("Microsoft.AspNetCore.Hosting")
         .AddMeter("Microsoft.AspNetCore.Server.Kestrel")// we could also do this...metrics exposed by .NET
         .AddConsoleExporter()
-        .AddPrometheusExporter()// prometheus will scrape data from the api container...
+        /*.AddPrometheusExporter()*/// prometheus will scrape data from the api container...commented out bcos we do not want the api being scraped but rather we send it to the collector and the collector exposes the scraping endpoint
+        .AddOtlpExporter(options => 
+            options.Endpoint = new Uri("http://otel-collector:4317")) // so we use this approach...push to the collector
         );
 
 builder.Services.AddEndpointsApiExplorer();
@@ -91,7 +97,7 @@ var app = builder.Build();
 
 app.UseGlobalExceptionMiddleware();
 
-app.UseOpenTelemetryPrometheusScrapingEndpoint();// this would expose an endpoint prometheus can call to scrape data from
+/*app.UseOpenTelemetryPrometheusScrapingEndpoint();*/// this would expose an endpoint prometheus can call to scrape data from
 
 await app.SeedData();
 

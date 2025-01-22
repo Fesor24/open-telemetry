@@ -9,10 +9,12 @@ services:
             - ASPNETCORE_HTTP_PORTS=5000 
         ports:
             - "7200:5000"
+
     jaeger:
         container_name: jaeger_countryapp
         ports:
             - "16686:16686"
+
     prometheus:
         container_name: prometheus_countryapp
         ports:
@@ -21,6 +23,7 @@ services:
             - ./prometheus.yml:/etc/prometheus/prometheus.yml
         command:
             - '--config.file=/etc/prometheus/prometheus.yml'
+
     grafana:
         container_name: grafana_countryapp
         ports:
@@ -31,10 +34,11 @@ services:
         environment:
             GF_AUTH_ANONYMOUS_ENABLED: "true"
             GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+
     otel-collector:
         container_name: collector_countryapp
         volumes:
-            - ./otel-collector/otel-collector-config.yml:/etc/otel/config.yaml
+            - ./otel-collector-config.yml:/etc/otel/config.yaml
             - ./log:/log/otel
         command: --config /etc/otel/config.yaml
         environment:
@@ -43,6 +47,7 @@ services:
             - "8889:8889" # Prometheus metrics exporter (scrape endpoint)
             - "13133:13133" # health check extension
             - "55679:55679" # ZPages extension
+            - "4317:4317" # OTLP receiver 
         depends_on:
             - jaeger
             - prometheus 
